@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -230,11 +231,25 @@ body::before {
 
 /* sync indicator */
 .sync-dot {
-  width:7px; height:7px; border-radius:50%; background:var(--green);
-  display:none; margin-right:4px;
+  font-size:.65rem; font-weight:600; letter-spacing:.02em;
+  padding:3px 9px; border-radius:6px; display:none; white-space:nowrap;
+  align-items:center; gap:5px;
 }
-.sync-dot.syncing { display:inline-block; background:var(--amber); animation:pulse .8s ease-in-out infinite; }
-.sync-dot.error   { display:inline-block; background:var(--red); }
+.sync-dot.syncing {
+  display:inline-flex;
+  background:rgba(253,203,110,.12); color:var(--amber);
+  border:1px solid rgba(253,203,110,.3);
+}
+.sync-dot.syncing::before {
+  content:''; width:7px; height:7px; border-radius:50%;
+  border:1.5px solid var(--amber); border-top-color:transparent;
+  animation:spin .7s linear infinite; flex-shrink:0;
+}
+.sync-dot.error {
+  display:inline-flex;
+  background:rgba(225,112,85,.12); color:var(--red);
+  border:1px solid rgba(225,112,85,.3);
+}
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
 /* ─── APP SHELL ─── */
@@ -2098,7 +2113,12 @@ async function loadUserData(user) {
         const remote = d.data().appData;
         if (remote) {
           APP = remote;
-          renderDashboard();
+          if (document.getElementById('view-dashboard')?.classList.contains('active')) renderDashboard();
+          if (document.getElementById('view-daily')?.classList.contains('active')) renderDaily();
+          if (document.getElementById('view-tasks')?.classList.contains('active')) renderTasks();
+          if (document.getElementById('view-manage')?.classList.contains('active')) renderManage();
+          if (document.getElementById('view-books')?.classList.contains('active')) renderBooks();
+          if (document.getElementById('view-analysis')?.classList.contains('active')) renderAnalysis();
           setSyncDot('ok');
         }
       }
@@ -2148,22 +2168,25 @@ function enterApp() {
 }
 
 // ═══════════════════════════════════════════
-// SAVE TO FIRESTORE  (debounced)
+// SAVE TO FIRESTORE
 // ═══════════════════════════════════════════
 let _isSaving = false;
 let _saveTimer = null;
 
-function saveData(d) {
-  // Still write to localStorage as fallback cache
-  try { localStorage.setItem(SK + '_cache', JSON.stringify(d)); } catch(e){}
+// Firestore rechaza undefined — limpiar antes de enviar
+function sanitizeForFirestore(obj) {
+  return JSON.parse(JSON.stringify(obj, (k, v) => v === undefined ? null : v));
+}
 
+function saveData(d) {
+  try { localStorage.setItem(SK + '_cache', JSON.stringify(d)); } catch(e){}
   if (!currentUser) return;
   setSyncDot('syncing');
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(async () => {
     _isSaving = true;
     try {
-      await setDoc(doc(db, 'users', currentUser.uid), { appData: d }, { merge: true });
+      await setDoc(doc(db, 'users', currentUser.uid), { appData: sanitizeForFirestore(d) }, { merge: true });
       setSyncDot('ok');
     } catch(e) {
       console.error('Error guardando:', e);
@@ -2171,17 +2194,62 @@ function saveData(d) {
     } finally {
       setTimeout(() => { _isSaving = false; }, 300);
     }
-  }, 800); // debounce 800ms
+  }, 800);
+}
+
+// Guardado inmediato — para cambios de configuración
+async function saveNow(d) {
+  try { localStorage.setItem(SK + '_cache', JSON.stringify(d)); } catch(e){}
+  if (!currentUser) return;
+  clearTimeout(_saveTimer);
+  setSyncDot('syncing');
+  _isSaving = true;
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), { appData: sanitizeForFirestore(d) }, { merge: true });
+    setSyncDot('ok');
+  } catch(e) {
+    console.error('Error guardando:', e);
+    setSyncDot('error');
+  } finally {
+    setTimeout(() => { _isSaving = false; }, 300);
+  }
 }
 
 function setSyncDot(state) {
-  const dot = document.getElementById('syncDot');
-  if (!dot) return;
-  dot.className = 'sync-dot';
-  if (state === 'syncing') { dot.classList.add('syncing'); dot.title = 'Guardando...'; }
-  else if (state === 'error') { dot.classList.add('error'); dot.title = 'Error al guardar'; }
-  else { dot.title = 'Sincronizado ✓'; }
+  const el = document.getElementById('syncDot');
+  if (!el) return;
+  el.className = 'sync-dot';
+  el.textContent = '';
+  if (state === 'syncing') {
+    el.classList.add('syncing');
+    el.appendChild(document.createTextNode('Guardando...'));
+  } else if (state === 'error') {
+    el.classList.add('error');
+    el.appendChild(document.createTextNode('Error al guardar'));
+  }
+  // ok → oculto
 }
+
+// Reconexión automática cuando el celular vuelve del background
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && currentUser) {
+    if (firestoreUnsub) firestoreUnsub();
+    const ref = doc(db, 'users', currentUser.uid);
+    firestoreUnsub = onSnapshot(ref, (snap) => {
+      if (snap.exists() && !_isSaving) {
+        const remote = snap.data().appData;
+        if (remote) {
+          APP = remote;
+          if (document.getElementById('view-dashboard')?.classList.contains('active')) renderDashboard();
+          if (document.getElementById('view-daily')?.classList.contains('active')) renderDaily();
+          if (document.getElementById('view-tasks')?.classList.contains('active')) renderTasks();
+          if (document.getElementById('view-manage')?.classList.contains('active')) renderManage();
+          if (document.getElementById('view-books')?.classList.contains('active')) renderBooks();
+        }
+      }
+    });
+  }
+});
 
 // ═══════════════════════════════════════════
 // ONBOARDING FLOW
