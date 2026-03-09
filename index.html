@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -230,10 +231,10 @@ body::before {
 /* sync indicator */
 .sync-dot {
   width:7px; height:7px; border-radius:50%; background:var(--green);
-  display:inline-block; margin-right:4px;
+  display:none; margin-right:4px;
 }
-.sync-dot.syncing { background:var(--amber); animation:pulse .8s ease-in-out infinite; }
-.sync-dot.error   { background:var(--red); }
+.sync-dot.syncing { display:inline-block; background:var(--amber); animation:pulse .8s ease-in-out infinite; }
+.sync-dot.error   { display:inline-block; background:var(--red); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
 /* ─── APP SHELL ─── */
@@ -321,13 +322,21 @@ nav {
 
 /* score ring */
 .score-wrap { display:flex; align-items:center; gap:20px; }
-.ring-outer { position:relative; width:90px; height:90px; flex-shrink:0; }
-.ring-outer svg { transform:rotate(-90deg); }
+.ring-outer {
+  position:relative; width:90px; height:90px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+}
+.ring-outer svg { position:absolute; top:0; left:0; transform:rotate(-90deg); }
 .ring-bg  { fill:none; stroke:var(--border2); stroke-width:7; }
 .ring-arc { fill:none; stroke:var(--accent); stroke-width:7; stroke-linecap:round; stroke-dasharray:264; stroke-dashoffset:264; transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1); }
-.ring-label { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.ring-pct { font-size:1.25rem; font-weight:700; }
-.ring-tag { font-size:.58rem; font-weight:500; color:var(--muted); letter-spacing:.06em; }
+.ring-label {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  pointer-events:none; z-index:1;
+}
+.ring-pct { font-size:1.2rem; font-weight:700; line-height:1; }
+.ring-tag { font-size:.56rem; font-weight:600; color:var(--muted); letter-spacing:.06em; margin-top:2px; }
 .score-info { flex:1; }
 .score-title { font-size:1.15rem; font-weight:700; margin-bottom:3px; }
 .score-desc  { font-size:.78rem; color:var(--sub); line-height:1.5; }
@@ -837,24 +846,11 @@ nav {
 /* ── USER MENU DIVIDER ── */
 .user-menu-divider { height:1px; background:var(--border); margin:4px 0; }
 
-/* ── FIX SKY WIDGET aspect ratio on mobile ── */
+/* ── FIX SKY WIDGET height ── */
 .dsw { height: 140px; }
-.dsw-arc-svg { preserveAspectRatio: xMidYMid meet; }
 
-/* ── FIX SCORE RING centering ── */
-.ring-outer {
-  position:relative; width:90px; height:90px;
-  flex-shrink:0; display:flex; align-items:center; justify-content:center;
-}
-.ring-outer svg { position:absolute; top:0; left:0; }
-.ring-label {
-  position:absolute; inset:0;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  pointer-events:none;
-}
-.ring-pct { font-size:1.2rem; font-weight:700; line-height:1; }
-.ring-tag { font-size:.56rem; font-weight:600; color:var(--muted); letter-spacing:.06em; margin-top:2px; }
+/* ── CLOCK CHIP ── */
+.clock-chip {
   font-size:.72rem; font-weight:600; color:var(--sub);
   background:var(--surface); border:1px solid var(--border);
   border-radius:7px; padding:5px 12px; font-variant-numeric:tabular-nums;
@@ -1081,9 +1077,10 @@ nav {
   .g2   { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
   .ag   { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
 
-  /* ── Score ring card ── */
+  /* ── Score ring ── */
   .score-wrap  { gap: 14px; }
-  .ring-outer  { width: 76px; height: 76px; flex-shrink: 0; }
+  .ring-outer  { width: 76px; height: 76px; }
+  .ring-outer svg { width: 76px; height: 76px; }
   .score-title { font-size: 1rem; }
   .score-desc  { font-size: .74rem; }
   .stat-v      { font-size: .9rem; }
@@ -1225,7 +1222,7 @@ nav {
         </div>
       </div>
 
-      <div class="auth-title">¡Bienvenido!</div>
+      <div class="auth-title">¡Bienvenite!</div>
       <div class="auth-sub">Iniciá sesión para sincronizar tus hábitos en todos tus dispositivos.</div>
 
       <div class="auth-error" id="authError"></div>
@@ -1465,7 +1462,7 @@ nav {
     <!-- horizon line -->
     <div class="dsw-horizon"></div>
     <!-- arc + body SVG -->
-    <svg class="dsw-arc-svg" id="dswArcSvg" viewBox="0 0 1000 130" preserveAspectRatio="none">
+    <svg class="dsw-arc-svg" id="dswArcSvg" viewBox="0 0 1000 130" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible">
       <defs>
         <!-- clipPath for moon crescent: shows only the left part of the circle -->
         <clipPath id="moonClip">
@@ -1476,13 +1473,23 @@ nav {
       <path id="dswArcPath" fill="none" stroke-width="1" stroke-dasharray="5 7"/>
       <!-- celestial body group -->
       <g id="dswBodyG">
+        <!-- Glow rings behind body -->
         <circle id="dswGlow"  cx="0" cy="0" r="26" opacity="0.13"/>
         <circle id="dswGlow2" cx="0" cy="0" r="15" opacity="0.22"/>
-        <!-- Sun circle (shown during day) -->
-        <circle id="dswDot" cx="0" cy="0" r="7"/>
-        <!-- Moon shadow (legacy, hidden) -->
-        <circle id="dswMoonShadow" cx="3.5" cy="0" r="6.2" style="display:none"/>
-        <!-- Moon phase SVG group (shown during night) -->
+        <!-- SUN group (shown during day) -->
+        <g id="dswSunG" style="display:none">
+          <circle id="dswSunCore" cx="0" cy="0" r="7"/>
+          <!-- rays -->
+          <line x1="0" y1="-11"  x2="0"  y2="-14"  stroke-width="1.5" stroke-linecap="round" id="dswRay0"/>
+          <line x1="7.8" y1="-7.8" x2="9.9" y2="-9.9" stroke-width="1.5" stroke-linecap="round" id="dswRay1"/>
+          <line x1="11" y1="0"   x2="14"  y2="0"   stroke-width="1.5" stroke-linecap="round" id="dswRay2"/>
+          <line x1="7.8" y1="7.8"  x2="9.9" y2="9.9"  stroke-width="1.5" stroke-linecap="round" id="dswRay3"/>
+          <line x1="0"  y1="11"  x2="0"   y2="14"  stroke-width="1.5" stroke-linecap="round" id="dswRay4"/>
+          <line x1="-7.8" y1="7.8" x2="-9.9" y2="9.9" stroke-width="1.5" stroke-linecap="round" id="dswRay5"/>
+          <line x1="-11" y1="0"  x2="-14" y2="0"   stroke-width="1.5" stroke-linecap="round" id="dswRay6"/>
+          <line x1="-7.8" y1="-7.8" x2="-9.9" y2="-9.9" stroke-width="1.5" stroke-linecap="round" id="dswRay7"/>
+        </g>
+        <!-- MOON group (shown during night) -->
         <g id="dswMoonPhase" style="display:none"></g>
       </g>
     </svg>
@@ -2597,52 +2604,54 @@ function drawStars(canvas, opacity){
 // Phases: 0→waxing crescent, ~0.25→first quarter, 0.5→full, ~0.75→last quarter, 1→waning crescent
 // ═══════════════════════════════════════════
 function buildMoonPhaseSVG(t, color) {
-  const R = 7;       // moon radius
+  const R = 8;
   const c = color || '#d8e4ff';
-  const shadow = '#0a0e1e'; // dark side color
 
-  // Map t (0..1) to a phase angle (0=new, PI=full, 2PI=new again)
-  // We center full moon at t=0.5 (zenith), crescents at edges
-  // phase: 0=new(invisible), PI/2=first quarter, PI=full, 3PI/2=last quarter
-  const phase = t * Math.PI; // 0..PI → new→full (rising side)
-
-  // We'll use the classic SVG moon crescent technique:
-  // Draw a full circle, then overlay an ellipse for the shadow part
-  // The ellipse x-radius varies: at full → 0 (no shadow), at crescent → R (fully covered except sliver)
-  // illumination fraction: 0..1 (0=new, 1=full)
+  // t: 0=rising crescent, 0.5=zenith(full), 1=setting crescent
+  const phase = t * Math.PI; // 0..PI
   const illum = Math.sin(phase); // 0 at edges, 1 at zenith
 
-  if(illum < 0.05) {
-    // Too dark to see: just a faint outline
-    return `<circle cx="0" cy="0" r="${R}" fill="none" stroke="${c}" stroke-opacity="0.3" stroke-width="0.8"/>`;
+  if(illum < 0.04) {
+    // Barely visible: thin crescent outline only
+    return `<path d="M 0,-${R} A ${R},${R} 0 1,1 0,${R} A ${R*0.3},${R} 0 1,0 0,-${R}" fill="${c}" opacity="0.25"/>`;
   }
 
-  // Determine if waxing (t<0.5) or waning (t>0.5)
-  const isWaxing = t <= 0.5;
+  // Full moon when near zenith
+  if(illum > 0.96) {
+    return `<circle cx="0" cy="0" r="${R}" fill="${c}" opacity="0.95"/>
+            <circle cx="-2" cy="-2" r="2.5" fill="${c}" opacity="0.3"/>
+            <circle cx="3" cy="1" r="1.5" fill="${c}" opacity="0.2"/>`;
+  }
 
-  // The shadow ellipse x-radius: R at new moon, 0 at full moon
+  // Crescent: use path technique (no filled black circle)
+  // Two arcs: outer = full circle arc, inner = ellipse arc creating the crescent
+  const isWaxing = t < 0.5; // waxing when rising (left side lit), waning when setting
+
+  // The crescent shadow rx shrinks as we approach full
   const shadowRx = R * Math.abs(Math.cos(phase));
 
-  // Build SVG:
-  // 1. Full moon circle (lit side)
-  // 2. Shadow ellipse (dark half)
-  const shadowDir = isWaxing ? -1 : 1; // shadow on left when waxing, right when waning
+  // We draw only the lit portion using path:
+  // Outer arc always right side for waxing, left for waning
+  const uid = 'mp' + Math.round(t * 10000);
 
-  // Use clipPath trick: clip to the moon circle, draw shadow ellipse inside
-  const uid = 'mp' + Math.round(t * 1000);
-  return `
-    <defs>
-      <clipPath id="${uid}">
-        <circle cx="0" cy="0" r="${R}"/>
-      </clipPath>
-    </defs>
-    <circle cx="0" cy="0" r="${R}" fill="${c}" opacity="0.92"/>
-    <ellipse cx="${shadowDir * shadowRx * 0.15}" cy="0"
-             rx="${shadowRx < 0.5 ? 0.5 : shadowRx}"
-             ry="${R}"
-             fill="${shadow}" opacity="0.88"
-             clip-path="url(#${uid})"/>
-  `;
+  // Clip to circle, draw the lit area via an ellipse overlap
+  if(isWaxing) {
+    // Waxing: lit on right side
+    return `<defs><clipPath id="${uid}"><circle cx="0" cy="0" r="${R}"/></clipPath></defs>
+      <circle cx="0" cy="0" r="${R}" fill="${c}" opacity="0.12"/>
+      <g clip-path="url(#${uid})">
+        <rect x="0" y="-${R}" width="${R}" height="${R*2}" fill="${c}" opacity="0.92"/>
+        <ellipse cx="0" cy="0" rx="${shadowRx}" ry="${R}" fill="${c}" opacity="0.92"/>
+      </g>`;
+  } else {
+    // Waning: lit on left side
+    return `<defs><clipPath id="${uid}"><circle cx="0" cy="0" r="${R}"/></clipPath></defs>
+      <circle cx="0" cy="0" r="${R}" fill="${c}" opacity="0.12"/>
+      <g clip-path="url(#${uid})">
+        <rect x="-${R}" y="-${R}" width="${R}" height="${R*2}" fill="${c}" opacity="0.92"/>
+        <ellipse cx="0" cy="0" rx="${shadowRx}" ry="${R}" fill="${c}" opacity="0.92"/>
+      </g>`;
+  }
 }
 
 function updateSkyScene(){
@@ -2650,12 +2659,11 @@ function updateSkyScene(){
   const bodyG   = document.getElementById('dswBodyG');
   const glow    = document.getElementById('dswGlow');
   const glow2   = document.getElementById('dswGlow2');
-  const dot     = document.getElementById('dswDot');
-  const shadow  = document.getElementById('dswMoonShadow');
+  const sunG    = document.getElementById('dswSunG');
   const tint    = document.getElementById('dswTint');
   const starsEl = document.getElementById('dswStars');
   const widget  = document.getElementById('daySummaryWidget');
-  if(!arcPath||!dot||!tint||!widget) return;
+  if(!arcPath||!sunG||!tint||!widget) return;
 
   const now=nowGTM3();
   const decH = now.getHours() + now.getMinutes()/60 + now.getSeconds()/3600;
@@ -2675,24 +2683,24 @@ function updateSkyScene(){
 
   // Sun or Moon
   const moonPhaseG = document.getElementById('dswMoonPhase');
-  dot.setAttribute('fill', col.body);
   if(isSun){
-    // Clean circle for sun
-    dot.setAttribute('r','7');
-    dot.style.display='';
-    shadow.style.display='none';
+    sunG.style.display='';
     moonPhaseG.style.display='none';
+    // Color sun core and rays
+    const sunCore = document.getElementById('dswSunCore');
+    sunCore.setAttribute('fill', col.body);
+    for(let i=0;i<8;i++){
+      const ray=document.getElementById('dswRay'+i);
+      if(ray){ ray.setAttribute('stroke', col.body); }
+    }
   } else {
-    // Moon phase: use position in night cycle (t) to determine phase
-    // t=0 → moon just rose (waxing crescent), t=0.5 → zenith (full), t=1 → setting (waning crescent)
-    // We use a simplified phase based on time of night
+    sunG.style.display='none';
+    moonPhaseG.style.display='';
+    // Moon phase based on position in night arc
     const nightT = (() => {
       const nh = decH >= SKY_SUNSET ? decH - SKY_SUNSET : decH + (24 - SKY_SUNSET);
-      return nh / SKY_NIGHTSPAN;
+      return Math.min(1, Math.max(0, nh / SKY_NIGHTSPAN));
     })();
-    dot.style.display='none';
-    shadow.style.display='none';
-    moonPhaseG.style.display='';
     moonPhaseG.innerHTML = buildMoonPhaseSVG(nightT, col.body);
   }
 
