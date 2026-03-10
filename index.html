@@ -339,6 +339,19 @@ nav {
   text-transform:uppercase; color:var(--muted);
 }
 .pip { width:5px; height:5px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.card-collapse-btn {
+  margin-left:auto; background:none; border:none; color:var(--muted);
+  cursor:pointer; padding:0 2px; font-size:13px; line-height:1;
+  transition:transform .22s, color .15s; flex-shrink:0;
+}
+.card-collapse-btn:hover { color:var(--text); }
+.card-collapse-btn.collapsed { transform:rotate(-90deg); }
+.card-body-collapsible {
+  overflow:hidden;
+  transition:max-height .28s cubic-bezier(.4,0,.2,1), opacity .22s;
+  max-height:3000px; opacity:1;
+}
+.card-body-collapsible.collapsed { max-height:0 !important; opacity:0; }
 
 /* score ring */
 .score-wrap { display:flex; align-items:center; gap:20px; }
@@ -1426,6 +1439,12 @@ nav {
   display: flex; align-items: center; justify-content: center; transition: all .12s; flex-shrink: 0;
 }
 .eco-service-del:hover { border-color: var(--red); color: var(--red); }
+.eco-service-edit {
+  width: 24px; height: 24px; border-radius: 5px; border: 1px solid var(--border2);
+  background: none; cursor: pointer; color: var(--muted); font-size: .65rem;
+  display: flex; align-items: center; justify-content: center; transition: all .12s; flex-shrink: 0;
+}
+.eco-service-edit:hover { border-color: var(--accent2); color: var(--accent2); }
 
 /* ── Debt item ── */
 .eco-debt-item {
@@ -1978,6 +1997,10 @@ nav {
   <div class="card" id="dashBooksCard" style="display:none">
     <div class="card-hd"><span class="pip" style="background:#74b9ff"></span>Libros en curso <span style="margin-left:auto;font-size:.65rem;font-weight:500;color:var(--accent2);cursor:pointer;letter-spacing:0;text-transform:none" onclick="showView('books')">Ver todos →</span></div>
     <div id="dashBooksList" class="db-books-row"></div>
+  </div>
+  <div class="card" id="dashVencCard" style="display:none">
+    <div class="card-hd"><span class="pip" style="background:#e17055"></span>Próximos vencimientos <span style="margin-left:auto;font-size:.65rem;font-weight:500;color:var(--accent2);cursor:pointer;letter-spacing:0;text-transform:none" onclick="showView('economia')">Ver todos →</span></div>
+    <div id="dashVencList"></div>
   </div>
 </div>
 
@@ -3005,6 +3028,7 @@ function showView(name) {
   const idx=['dashboard','daily','analysis','tasks','books','manage','achievements','economia'].indexOf(name);
   document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
   ({dashboard:renderDashboard,daily:renderDaily,analysis:renderAnalysis,tasks:renderTasks,books:renderBooks,manage:renderManage,achievements:renderAchievements})[name]?.();
+  if(name==='dashboard') setTimeout(initDashCollapse, 80);
 }
 
 // ═══════════════════════════════════════════
@@ -3022,7 +3046,8 @@ function updateHeaderDate() {
 // DASHBOARD
 // ═══════════════════════════════════════════
 function renderDashboard() {
-  renderDSW(); renderRing(); renderWeek(); renderCatBars(); renderStreaks(); renderHeatmap(); renderLineChart(); renderDashBooksSummary();
+  renderDSW(); renderRing(); renderWeek(); renderCatBars(); renderStreaks(); renderHeatmap(); renderLineChart(); renderDashBooksSummary(); renderDashVenc();
+  setTimeout(initDashCollapse, 80);
 }
 
 function renderDSW(){
@@ -3533,6 +3558,12 @@ function renderDaily() {
   if(unfiled.length)groups.push({folder:{id:'unfiled',name:'Sin carpeta',color:'#55556a',emoji:''},habits:unfiled});
 
   groups.forEach(({folder,habits})=>{
+    // Ordenar: pendientes arriba, completados abajo
+    const log0=getLog(viewingDate);
+    habits.sort((a,b)=>{
+      const da=log0[a.id]?.done?1:0, db=log0[b.id]?.done?1:0;
+      return da-db;
+    });
     const done=habits.filter(h=>log[h.id]?.done).length;
     const pct=Math.round((done/habits.length)*100);
     const gid='dg_'+folder.id;
@@ -4530,6 +4561,42 @@ function renderBooks(){
     c.appendChild(card);
   });
 }
+function renderDashVenc() {
+  const card = document.getElementById('dashVencCard');
+  const list = document.getElementById('dashVencList');
+  if (!card || !list) return;
+  const eco = (typeof getEco === 'function') ? getEco() : null;
+  if (!eco || !eco.services || !eco.services.length) { card.style.display = 'none'; return; }
+  const now = nowGTM3();
+  const todayDay = now.getDate();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const upcoming = eco.services
+    .filter(s => {
+      const paid = (s.paidMonths||[]).includes(monthKey);
+      if (paid) return false;
+      const days = s.dueDay - todayDay;
+      return days >= -3 && days <= 15;
+    })
+    .sort((a,b) => a.dueDay - b.dueDay);
+  if (!upcoming.length) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  list.innerHTML = '';
+  upcoming.forEach(svc => {
+    const days = svc.dueDay - todayDay;
+    let cls = 'eco-due-ok', txt = `en ${days}d`;
+    if (days < 0)     { cls = 'eco-due-overdue'; txt = `hace ${Math.abs(days)}d`; }
+    else if (days === 0) { cls = 'eco-due-soon'; txt = '¡hoy!'; }
+    else if (days <= 3)  { cls = 'eco-due-soon'; txt = `en ${days}d`; }
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.8rem';
+    row.innerHTML = `<span style="font-size:16px">${svc.emoji||'⚡'}</span>
+      <span style="flex:1;color:var(--text)">${svc.name}</span>
+      <span class="eco-due-badge ${cls}">${txt}</span>
+      <span style="font-weight:700;color:var(--text)">${typeof ecoFmt==='function'?ecoFmt(svc.amount):'$'+svc.amount}</span>`;
+    list.appendChild(row);
+  });
+}
+
 function renderDashBooksSummary(){
   const el=document.getElementById('dashBooksList'),card=document.getElementById('dashBooksCard');
   if(!el||!card)return;
@@ -5227,6 +5294,45 @@ window.searchWeatherCity = searchWeatherCity;
 window.autoLocateWeather = autoLocateWeather;
 window.selectWeatherCity = selectWeatherCity;
 
+
+// ══ Dashboard card collapse ══
+function initDashCollapse() {
+  if (!APP._dashCollapsed) APP._dashCollapsed = {};
+  document.querySelectorAll('#view-dashboard .card').forEach((card, i) => {
+    const hd = card.querySelector('.card-hd');
+    if (!hd || hd.querySelector('.card-collapse-btn')) return;
+    const key = 'dash_' + i;
+    // Wrap all non-.card-hd children in collapsible div
+    const children = [...card.children].filter(el => !el.classList.contains('card-hd'));
+    if (!children.length) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'card-body-collapsible';
+    wrapper.dataset.key = key;
+    children.forEach(ch => wrapper.appendChild(ch));
+    card.appendChild(wrapper);
+    // Button
+    const btn = document.createElement('button');
+    btn.className = 'card-collapse-btn';
+    btn.title = 'Minimizar';
+    btn.innerHTML = '&#8964;';
+    btn.onclick = (e) => { e.stopPropagation(); toggleDashCard(key, btn, wrapper); };
+    hd.appendChild(btn);
+    // Restore state
+    if (APP._dashCollapsed[key]) {
+      wrapper.classList.add('collapsed');
+      btn.classList.add('collapsed');
+    }
+  });
+}
+function toggleDashCard(key, btn, wrapper) {
+  if (!APP._dashCollapsed) APP._dashCollapsed = {};
+  const isCollapsed = wrapper.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed', isCollapsed);
+  APP._dashCollapsed[key] = isCollapsed;
+  saveData(APP);
+}
+window.toggleDashCard = toggleDashCard;
+
 // ══ ECONOMÍA ══
 
 // ═══════════════════════════════════════════
@@ -5510,6 +5616,7 @@ function renderEcoServicios() {
       <button class="eco-service-pay ${paidThisMonth?'paid':''}" onclick="toggleServicePaid('${svc.id}')" title="${paidThisMonth?'Marcar como no pagado':'Marcar como pagado'}">
         ${paidThisMonth ? '✓' : '○'}
       </button>
+      <button class="eco-service-edit" onclick="openServiceModal('${svc.id}')" title="Editar"><svg viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></button>
       <button class="eco-service-del" onclick="deleteService('${svc.id}')">✕</button>`;
     c.appendChild(item);
   });
