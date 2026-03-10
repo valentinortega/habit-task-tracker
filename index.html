@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1207,6 +1208,373 @@ nav {
   .nav-btn span { display: block; }
   .app { padding-bottom: 90px; }
 }
+
+/* ══ ECONOMÍA ══ */
+
+/* ══════════════════════════════════════
+   ECONOMÍA — ESTILOS
+══════════════════════════════════════ */
+
+/* ── Resumen superior ── */
+.eco-hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.eco-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108,92,231,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eco-balance-label {
+  font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+}
+.eco-balance-amount {
+  font-size: 2.2rem; font-weight: 800; letter-spacing: -.02em;
+  line-height: 1; margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.eco-balance-sub {
+  font-size: .72rem; color: var(--sub); margin-bottom: 16px;
+}
+.eco-stats-row {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+}
+.eco-stat-pill {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.eco-stat-pill-label {
+  font-size: .56rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center; gap: 4px;
+}
+.eco-stat-pill-val {
+  font-size: .98rem; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Tabs ── */
+.eco-tabs {
+  display: flex; gap: 4px; margin-bottom: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 11px; padding: 4px;
+}
+.eco-tab {
+  flex: 1; padding: 7px 6px; border-radius: 8px; border: none;
+  background: transparent; cursor: pointer;
+  font-family: var(--f); font-size: .72rem; font-weight: 500;
+  color: var(--sub); transition: all .18s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.eco-tab.active {
+  background: var(--card); color: var(--text);
+  box-shadow: 0 1px 6px rgba(0,0,0,.5); font-weight: 600;
+}
+.eco-tab:hover:not(.active) { color: var(--text); }
+.eco-tab-badge {
+  font-size: .58rem; font-weight: 700; padding: 1px 6px;
+  border-radius: 20px; background: var(--border2); color: var(--sub);
+}
+.eco-tab.active .eco-tab-badge {
+  background: var(--accent); color: #fff;
+}
+
+/* ── Panels ── */
+.eco-panel { display: none; }
+.eco-panel.active { display: block; animation: fadeUp .2s ease; }
+
+/* ── Toolbar ── */
+.eco-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
+}
+.eco-toolbar-left { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.eco-period-btn {
+  padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border2);
+  background: transparent; font-family: var(--f); font-size: .7rem; font-weight: 500;
+  color: var(--sub); cursor: pointer; transition: all .14s; white-space: nowrap;
+}
+.eco-period-btn.sel { background: var(--border2); color: var(--text); }
+.eco-add-btn {
+  padding: 7px 14px; border-radius: 8px; border: none;
+  background: var(--accent); color: #fff;
+  font-family: var(--f); font-size: .75rem; font-weight: 600;
+  cursor: pointer; transition: background .14s; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+}
+.eco-add-btn:hover { background: var(--accent2); }
+.eco-add-btn.green { background: var(--green); }
+.eco-add-btn.green:hover { background: #00c98a; }
+.eco-add-btn.amber { background: var(--amber); color: #1a1a2e; }
+.eco-add-btn.amber:hover { background: #f0b84a; }
+.eco-add-btn.red { background: var(--red); }
+.eco-add-btn.red:hover { background: #d05a40; }
+
+/* ── Transaction item ── */
+.eco-tx-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  transition: background .12s; cursor: default;
+}
+.eco-tx-item:last-child { border-bottom: none; }
+.eco-tx-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.eco-tx-info { flex: 1; min-width: 0; }
+.eco-tx-name {
+  font-size: .83rem; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 1px;
+}
+.eco-tx-meta { font-size: .62rem; color: var(--muted); display: flex; gap: 8px; }
+.eco-tx-tag {
+  font-size: .56rem; font-weight: 700; padding: 1px 6px;
+  border-radius: 20px; letter-spacing: .04em;
+}
+.eco-tx-amount {
+  font-size: .9rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0;
+}
+.eco-tx-del {
+  width: 22px; height: 22px; border-radius: 5px; border: 1px solid var(--border2);
+  background: none; cursor: pointer; color: var(--muted); font-size: .65rem;
+  display: flex; align-items: center; justify-content: center; transition: all .12s;
+  flex-shrink: 0; opacity: 0;
+}
+.eco-tx-item:hover .eco-tx-del { opacity: 1; }
+.eco-tx-del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Chart donut ── */
+.eco-donut-wrap {
+  display: flex; align-items: center; gap: 20px;
+  flex-wrap: wrap;
+}
+.eco-donut-svg { flex-shrink: 0; position: relative; }
+.eco-donut-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.eco-donut-center-val {
+  font-size: .88rem; font-weight: 800;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.eco-donut-center-lbl {
+  font-size: .5rem; font-weight: 600; color: var(--muted);
+  letter-spacing: .06em; text-transform: uppercase; margin-top: 2px;
+}
+.eco-legend { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 120px; }
+.eco-legend-item {
+  display: flex; align-items: center; gap: 7px; font-size: .75rem;
+}
+.eco-legend-dot {
+  width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
+}
+.eco-legend-name { flex: 1; color: var(--sub); }
+.eco-legend-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ── Services / Bills ── */
+.eco-service-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.eco-service-item:last-child { border-bottom: none; }
+.eco-service-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.eco-service-info { flex: 1; min-width: 0; }
+.eco-service-name {
+  font-size: .83rem; font-weight: 500; margin-bottom: 2px;
+}
+.eco-service-meta { font-size: .62rem; color: var(--muted); }
+.eco-service-amount {
+  font-size: .85rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; text-align: right; flex-shrink: 0;
+}
+.eco-service-due {
+  font-size: .6rem; font-weight: 600;
+  text-align: right; margin-top: 2px;
+}
+.eco-service-pay {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1.5px solid var(--border2); background: transparent;
+  cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .14s; font-size: 12px;
+}
+.eco-service-pay:hover { border-color: var(--green); color: var(--green); }
+.eco-service-pay.paid { border-color: var(--green); background: rgba(0,184,148,.15); color: var(--green); }
+.eco-service-del {
+  width: 24px; height: 24px; border-radius: 5px; border: 1px solid var(--border2);
+  background: none; cursor: pointer; color: var(--muted); font-size: .65rem;
+  display: flex; align-items: center; justify-content: center; transition: all .12s; flex-shrink: 0;
+}
+.eco-service-del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Debt item ── */
+.eco-debt-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.eco-debt-item:last-child { border-bottom: none; }
+.eco-debt-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0; background: rgba(253,203,110,.12);
+}
+.eco-debt-info { flex: 1; min-width: 0; }
+.eco-debt-name { font-size: .83rem; font-weight: 600; margin-bottom: 2px; }
+.eco-debt-desc { font-size: .68rem; color: var(--sub); margin-bottom: 6px; line-height: 1.4; }
+.eco-debt-progress { display: flex; flex-direction: column; gap: 4px; }
+.eco-debt-bar-row { display: flex; align-items: center; gap: 8px; }
+.eco-debt-track {
+  flex: 1; height: 5px; background: var(--border2); border-radius: 3px; overflow: hidden;
+}
+.eco-debt-fill {
+  height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1);
+}
+.eco-debt-pct { font-size: .62rem; font-weight: 700; color: var(--amber); width: 32px; text-align: right; }
+.eco-debt-amounts { display: flex; justify-content: space-between; font-size: .62rem; color: var(--muted); }
+.eco-debt-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.eco-debt-total { font-size: .9rem; font-weight: 700; color: var(--amber); font-variant-numeric: tabular-nums; }
+.eco-debt-remaining { font-size: .62rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.eco-debt-pay-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border2);
+  background: transparent; cursor: pointer; font-family: var(--f);
+  font-size: .65rem; font-weight: 600; color: var(--sub); transition: all .12s;
+}
+.eco-debt-pay-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ── Savings goals ── */
+.eco-goal-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; margin-bottom: 10px;
+  position: relative; overflow: hidden;
+}
+.eco-goal-item:last-child { margin-bottom: 0; }
+.eco-goal-header { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.eco-goal-icon { font-size: 20px; }
+.eco-goal-name { font-size: .85rem; font-weight: 700; flex: 1; }
+.eco-goal-pct-badge {
+  font-size: .62rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px;
+}
+.eco-goal-track {
+  height: 7px; background: var(--border2); border-radius: 4px;
+  overflow: hidden; margin-bottom: 8px;
+}
+.eco-goal-fill {
+  height: 100%; border-radius: 4px;
+  transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+.eco-goal-footer {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+}
+.eco-goal-amounts { font-size: .7rem; color: var(--sub); font-variant-numeric: tabular-nums; }
+.eco-goal-add-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border2);
+  background: transparent; cursor: pointer; font-family: var(--f);
+  font-size: .65rem; font-weight: 600; color: var(--sub); transition: all .12s;
+}
+.eco-goal-add-btn:hover { border-color: var(--green); color: var(--green); }
+.eco-goal-del-btn {
+  padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border2);
+  background: transparent; cursor: pointer; color: var(--muted); font-size: .65rem; transition: all .12s;
+}
+.eco-goal-del-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Bar chart monthly ── */
+.eco-bar-chart-wrap { overflow: hidden; }
+.eco-bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 80px; }
+.eco-chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.eco-chart-bars { flex: 1; display: flex; align-items: flex-end; gap: 1px; width: 100%; }
+.eco-chart-bar {
+  flex: 1; border-radius: 3px 3px 0 0; min-height: 2px;
+  transition: height .7s cubic-bezier(.4,0,.2,1);
+}
+.eco-chart-lbl { font-size: .54rem; font-weight: 500; color: var(--muted); }
+
+/* ── Currency selector ── */
+.eco-currency-chip {
+  font-size: .68rem; font-weight: 700; padding: 4px 10px;
+  border-radius: 7px; border: 1px solid var(--border2);
+  background: var(--surface); cursor: pointer; color: var(--sub);
+  transition: all .13s; letter-spacing: .04em;
+}
+.eco-currency-chip:hover { border-color: var(--accent); color: var(--accent2); }
+
+/* ── Empty state ── */
+.eco-empty {
+  text-align: center; padding: 28px 16px;
+  color: var(--muted); font-size: .8rem;
+}
+.eco-empty svg { margin-bottom: 8px; opacity: .4; }
+
+/* ── Modal economy ── */
+.eco-modal-cat-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-top: 6px;
+}
+.eco-cat-btn {
+  padding: 8px 4px; border-radius: 9px; border: 1.5px solid var(--border2);
+  background: var(--surface); cursor: pointer; text-align: center;
+  font-family: var(--f); font-size: .68rem; font-weight: 500; color: var(--sub);
+  transition: all .14s;
+}
+.eco-cat-btn:hover { border-color: var(--accent2); color: var(--text); }
+.eco-cat-btn.sel { border-color: var(--accent); background: rgba(108,92,231,.12); color: var(--text); font-weight: 700; }
+.eco-cat-emoji { font-size: 16px; display: block; margin-bottom: 3px; }
+
+/* ── Section header ── */
+.eco-section-hdr {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.eco-section-hdr-title {
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.eco-section-hdr-line {
+  flex: 1; height: 1px; background: var(--border);
+}
+.eco-section-hdr-action {
+  font-size: .65rem; font-weight: 600; color: var(--accent2); cursor: pointer;
+  background: none; border: none; font-family: var(--f); transition: opacity .13s;
+}
+.eco-section-hdr-action:hover { opacity: .75; }
+
+/* ── Due soon badge ── */
+.eco-due-badge {
+  font-size: .58rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; letter-spacing: .03em;
+}
+.eco-due-overdue { background: rgba(225,112,85,.15); color: var(--red); }
+.eco-due-soon    { background: rgba(253,203,110,.15); color: var(--amber); }
+.eco-due-ok      { background: rgba(0,184,148,.1);   color: var(--green); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .eco-stats-row { grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .eco-stat-pill-val { font-size: .85rem; }
+  .eco-balance-amount { font-size: 1.8rem; }
+  .eco-donut-wrap { flex-direction: column; align-items: flex-start; }
+  .eco-modal-cat-grid { grid-template-columns: repeat(3,1fr); }
+}
+
 </style>
 </head>
 <body>
@@ -1469,6 +1837,10 @@ nav {
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
     <span>Logros</span>
   </button>
+  <button class="nav-btn" onclick="showView('economia')">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    <span>Economía</span>
+  </button>
 </nav>
 
 <!-- DASHBOARD -->
@@ -1616,6 +1988,167 @@ nav {
     <div class="ach-grid" id="achGrid"></div>
   </div>
 </div>
+
+<!-- ECONOMÍA -->
+<div class="view" id="view-economia">
+  <!-- Hero balance -->
+  <div class="eco-hero">
+    <div class="eco-balance-label">Balance del mes</div>
+    <div class="eco-balance-amount" id="ecoBalanceAmount">$0</div>
+    <div class="eco-balance-sub" id="ecoBalanceSub">Ingresos menos egresos</div>
+    <div class="eco-stats-row">
+      <div class="eco-stat-pill">
+        <div class="eco-stat-pill-label" style="color:var(--green)">
+          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          Ingresos
+        </div>
+        <div class="eco-stat-pill-val" style="color:var(--green)" id="ecoTotalIncome">$0</div>
+      </div>
+      <div class="eco-stat-pill">
+        <div class="eco-stat-pill-label" style="color:var(--red)">
+          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          Gastos
+        </div>
+        <div class="eco-stat-pill-val" style="color:var(--red)" id="ecoTotalExpense">$0</div>
+      </div>
+      <div class="eco-stat-pill">
+        <div class="eco-stat-pill-label" style="color:var(--amber)">
+          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Deudas
+        </div>
+        <div class="eco-stat-pill-val" style="color:var(--amber)" id="ecoTotalDebt">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="eco-tabs">
+    <button class="eco-tab active" onclick="ecoShowTab('movimientos',this)">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m10 0h3a2 2 0 0 0 2-2v-3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Movimientos
+      <span class="eco-tab-badge" id="ecoBadgeMovimientos">0</span>
+    </button>
+    <button class="eco-tab" onclick="ecoShowTab('servicios',this)">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Servicios
+      <span class="eco-tab-badge" id="ecoBadgeServicios">0</span>
+    </button>
+    <button class="eco-tab" onclick="ecoShowTab('deudas',this)">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Deudas
+      <span class="eco-tab-badge" id="ecoBadgeDeudas">0</span>
+    </button>
+    <button class="eco-tab" onclick="ecoShowTab('metas',this)">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      Metas
+      <span class="eco-tab-badge" id="ecoBadgeMetas">0</span>
+    </button>
+    <button class="eco-tab" onclick="ecoShowTab('analisis',this)">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Análisis
+    </button>
+  </div>
+
+  <!-- MOVIMIENTOS -->
+  <div class="eco-panel active" id="ecoPanelMovimientos">
+    <div class="eco-toolbar">
+      <div class="eco-toolbar-left">
+        <button class="eco-period-btn sel" data-ecomonth="current" onclick="ecoSelMonth(this)">Este mes</button>
+        <button class="eco-period-btn" data-ecomonth="prev" onclick="ecoSelMonth(this)">Mes anterior</button>
+        <button class="eco-period-btn" data-ecomonth="all" onclick="ecoSelMonth(this)">Todo</button>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="eco-add-btn green" onclick="openEcoModal('income')">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Ingreso
+        </button>
+        <button class="eco-add-btn red" onclick="openEcoModal('expense')">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Gasto
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <div id="ecoMovimientosList"></div>
+    </div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <div class="eco-panel" id="ecoPanelServicios">
+    <div class="eco-toolbar">
+      <div class="eco-toolbar-left">
+        <span style="font-size:.75rem;color:var(--sub)">Vencimientos y pagos recurrentes</span>
+      </div>
+      <button class="eco-add-btn amber" onclick="openServiceModal()">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nuevo servicio
+      </button>
+    </div>
+    <div class="card" id="ecoServiciosList" style="margin-bottom:10px"></div>
+    <!-- Upcoming due dates card -->
+    <div class="card">
+      <div class="eco-section-hdr">
+        <span class="eco-section-hdr-title">Próximos vencimientos</span>
+        <span class="eco-section-hdr-line"></span>
+      </div>
+      <div id="ecoProximosVenc"></div>
+    </div>
+  </div>
+
+  <!-- DEUDAS -->
+  <div class="eco-panel" id="ecoPanelDeudas">
+    <div class="eco-toolbar">
+      <div class="eco-toolbar-left">
+        <span style="font-size:.75rem;color:var(--sub)">Lo que te deben a vos</span>
+      </div>
+      <button class="eco-add-btn amber" onclick="openDebtModal()">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva deuda
+      </button>
+    </div>
+    <div class="card">
+      <div id="ecoDebtsList"></div>
+    </div>
+  </div>
+
+  <!-- METAS DE AHORRO -->
+  <div class="eco-panel" id="ecoPanelMetas">
+    <div class="eco-toolbar">
+      <div class="eco-toolbar-left">
+        <span style="font-size:.75rem;color:var(--sub)">Objetivos de ahorro</span>
+      </div>
+      <button class="eco-add-btn" onclick="openGoalModal()">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva meta
+      </button>
+    </div>
+    <div id="ecoGoalsList"></div>
+  </div>
+
+  <!-- ANÁLISIS -->
+  <div class="eco-panel" id="ecoPanelAnalisis">
+    <div class="g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-hd"><span class="pip" style="background:var(--accent)"></span>Gastos por categoría</div>
+        <div class="eco-donut-wrap" id="ecoDonutWrap"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="pip" style="background:var(--green)"></span>Ingresos por categoría</div>
+        <div class="eco-donut-wrap" id="ecoIncomeDonutWrap"></div>
+      </div>
+    </div>
+    <div class="card card-mb">
+      <div class="card-hd"><span class="pip" style="background:#74b9ff"></span>Ingresos vs Gastos (6 meses)</div>
+      <canvas id="ecoLineChart" style="width:100%!important;height:160px!important"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="pip" style="background:var(--amber)"></span>Resumen financiero</div>
+      <div id="ecoSummaryInsights"></div>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- DAILY -->
 <div class="view" id="view-daily">
@@ -2469,7 +3002,7 @@ function showView(name) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const idx=['dashboard','daily','analysis','tasks','books','manage','achievements'].indexOf(name);
+  const idx=['dashboard','daily','analysis','tasks','books','manage','achievements','economia'].indexOf(name);
   document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
   ({dashboard:renderDashboard,daily:renderDaily,analysis:renderAnalysis,tasks:renderTasks,books:renderBooks,manage:renderManage,achievements:renderAchievements})[name]?.();
 }
@@ -4693,9 +5226,998 @@ window.openWeatherPicker = openWeatherPicker;
 window.searchWeatherCity = searchWeatherCity;
 window.autoLocateWeather = autoLocateWeather;
 window.selectWeatherCity = selectWeatherCity;
+
+// ══ ECONOMÍA ══
+
+// ═══════════════════════════════════════════
+// ECONOMÍA — MÓDULO COMPLETO
+// ═══════════════════════════════════════════
+
+// ── showView patch ──
+// This extends the existing showView to handle 'economia'
+const _origShowView = window.showView;
+window.showView = function(name) {
+  if (name === 'economia') {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('view-economia').classList.add('active');
+    const idx = [...document.querySelectorAll('.nav-btn')].findIndex(b => b.getAttribute('onclick') === "showView('economia')");
+    if (idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+    renderEconomia();
+  } else {
+    _origShowView(name);
+  }
+};
+
+// ── Currency ──
+const ECO_CURRENCY = '$';
+
+function ecoFmt(n) {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 1000000) return sign + ECO_CURRENCY + (abs/1000000).toFixed(1) + 'M';
+  if (abs >= 1000)    return sign + ECO_CURRENCY + (abs/1000).toFixed(abs>=10000?0:1) + 'K';
+  return sign + ECO_CURRENCY + abs.toLocaleString('es-AR', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+
+// ── Default economy data ──
+function defaultEco() {
+  return {
+    transactions: [],   // {id, type:'income'|'expense', name, amount, date, category, note}
+    services: [],       // {id, name, amount, dueDay, freq, emoji, paidMonths:[]}
+    debts: [],          // {id, who, desc, total, paid, dueDate, createdAt}
+    goals: []           // {id, name, emoji, target, saved, color}
+  };
+}
+
+// ── Get/ensure eco data ──
+function getEco() {
+  if (!APP.eco) APP.eco = defaultEco();
+  if (!APP.eco.transactions) APP.eco.transactions = [];
+  if (!APP.eco.services)     APP.eco.services = [];
+  if (!APP.eco.debts)        APP.eco.debts = [];
+  if (!APP.eco.goals)        APP.eco.goals = [];
+  return APP.eco;
+}
+
+// ── Categories ──
+const ECO_INCOME_CATS = [
+  {id:'salary',   emoji:'💼', label:'Sueldo'},
+  {id:'freelance',emoji:'💻', label:'Freelance'},
+  {id:'gift',     emoji:'🎁', label:'Regalo'},
+  {id:'invest',   emoji:'📈', label:'Inversión'},
+  {id:'sale',     emoji:'🏷️', label:'Venta'},
+  {id:'refund',   emoji:'↩️', label:'Reembolso'},
+  {id:'other_in', emoji:'➕', label:'Otro'},
+];
+const ECO_EXPENSE_CATS = [
+  {id:'food',      emoji:'🍔', label:'Comida'},
+  {id:'transport', emoji:'🚗', label:'Transporte'},
+  {id:'health',    emoji:'🏥', label:'Salud'},
+  {id:'entertainment',emoji:'🎬',label:'Ocio'},
+  {id:'clothing',  emoji:'👕', label:'Ropa'},
+  {id:'home',      emoji:'🏠', label:'Hogar'},
+  {id:'education', emoji:'📚', label:'Educación'},
+  {id:'tech',      emoji:'💻', label:'Tecnología'},
+  {id:'sport',     emoji:'🏋️', label:'Deporte'},
+  {id:'beauty',    emoji:'💅', label:'Cuidado'},
+  {id:'pets',      emoji:'🐾', label:'Mascotas'},
+  {id:'other_ex',  emoji:'💸', label:'Otro'},
+];
+
+let _ecoCatSel = 'other_in';
+let ecoMonthFilter = 'current';
+let ecoActiveTab = 'movimientos';
+
+// ── Tab navigation ──
+function ecoShowTab(tab, btn) {
+  ecoActiveTab = tab;
+  document.querySelectorAll('.eco-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.eco-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ecoPanelMovimientos') && (document.getElementById('ecoPanelMovimientos').classList.remove('active'));
+  document.getElementById('ecoPanelServicios')   && (document.getElementById('ecoPanelServicios').classList.remove('active'));
+  document.getElementById('ecoPanelDeudas')      && (document.getElementById('ecoPanelDeudas').classList.remove('active'));
+  document.getElementById('ecoPanelMetas')       && (document.getElementById('ecoPanelMetas').classList.remove('active'));
+  document.getElementById('ecoPanelAnalisis')    && (document.getElementById('ecoPanelAnalisis').classList.remove('active'));
+  const panelMap = {
+    movimientos: 'ecoPanelMovimientos', servicios: 'ecoPanelServicios',
+    deudas: 'ecoPanelDeudas', metas: 'ecoPanelMetas', analisis: 'ecoPanelAnalisis'
+  };
+  const p = document.getElementById(panelMap[tab]);
+  if (p) p.classList.add('active');
+  renderEcoTab(tab);
+}
+
+function ecoSelMonth(btn) {
+  ecoMonthFilter = btn.dataset.ecomonth;
+  document.querySelectorAll('[data-ecomonth]').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderEcoMovimientos();
+}
+
+// ── Main render ──
+function renderEconomia() {
+  renderEcoHero();
+  renderEcoBadges();
+  renderEcoTab(ecoActiveTab);
+}
+
+function renderEcoTab(tab) {
+  if (tab === 'movimientos') renderEcoMovimientos();
+  else if (tab === 'servicios') renderEcoServicios();
+  else if (tab === 'deudas') renderEcoDeudas();
+  else if (tab === 'metas') renderEcoMetas();
+  else if (tab === 'analisis') renderEcoAnalisis();
+}
+
+// ── Hero ──
+function renderEcoHero() {
+  const eco = getEco();
+  const now = nowGTM3();
+  const curMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const monthTx = eco.transactions.filter(t => t.date && t.date.startsWith(curMonth));
+  const income  = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+  const expense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+  const balance = income - expense;
+  const totalDebt = eco.debts.reduce((s,d) => s + Math.max(0, d.total - (d.paid||0)), 0);
+
+  const balEl = document.getElementById('ecoBalanceAmount');
+  const subEl = document.getElementById('ecoBalanceSub');
+  if (balEl) {
+    balEl.textContent = ecoFmt(balance);
+    balEl.style.color = balance >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+  if (subEl) subEl.textContent = balance >= 0
+    ? `Guardaste ${ecoFmt(balance)} este mes 🎉`
+    : `Gastaste ${ecoFmt(Math.abs(balance))} más de lo que ingresó`;
+
+  const iEl = document.getElementById('ecoTotalIncome');
+  const eEl = document.getElementById('ecoTotalExpense');
+  const dEl = document.getElementById('ecoTotalDebt');
+  if (iEl) iEl.textContent = ecoFmt(income);
+  if (eEl) eEl.textContent = ecoFmt(expense);
+  if (dEl) dEl.textContent = ecoFmt(totalDebt);
+}
+
+// ── Badges ──
+function renderEcoBadges() {
+  const eco = getEco();
+  const now = nowGTM3();
+  const curMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+
+  const bMov = document.getElementById('ecoBadgeMovimientos');
+  const bSer = document.getElementById('ecoBadgeServicios');
+  const bDeb = document.getElementById('ecoBadgeDeudas');
+  const bMet = document.getElementById('ecoBadgeMetas');
+
+  if (bMov) bMov.textContent = eco.transactions.filter(t => t.date && t.date.startsWith(curMonth)).length;
+  if (bSer) bSer.textContent = eco.services.length;
+  if (bDeb) bDeb.textContent = eco.debts.filter(d => d.paid < d.total).length;
+  if (bMet) bMet.textContent = eco.goals.length;
+}
+
+// ── Movimientos ──
+function getFilteredTx() {
+  const eco = getEco();
+  const now = nowGTM3();
+  if (ecoMonthFilter === 'all') return [...eco.transactions].sort((a,b) => b.date.localeCompare(a.date));
+  const yr = now.getFullYear(), mo = now.getMonth() + (ecoMonthFilter === 'prev' ? 0 : 1);
+  const m = mo < 1 ? 12 : mo > 12 ? 1 : mo;
+  const y = mo < 1 ? yr - 1 : mo > 12 ? yr + 1 : yr;
+  const prefix = y + '-' + String(m).padStart(2,'0');
+  return eco.transactions.filter(t => t.date && t.date.startsWith(prefix)).sort((a,b) => b.date.localeCompare(a.date));
+}
+
+function renderEcoMovimientos() {
+  const c = document.getElementById('ecoMovimientosList');
+  if (!c) return;
+  const txs = getFilteredTx();
+  if (!txs.length) {
+    c.innerHTML = `<div class="eco-empty">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      <div>Sin movimientos para este período.</div><div style="font-size:.72rem;margin-top:4px">Agregá tu primer ingreso o gasto.</div>
+    </div>`;
+    return;
+  }
+  c.innerHTML = '';
+  // Group by date
+  const groups = {};
+  txs.forEach(t => { if (!groups[t.date]) groups[t.date] = []; groups[t.date].push(t); });
+  Object.keys(groups).sort((a,b) => b.localeCompare(a)).forEach(date => {
+    const dayEl = document.createElement('div');
+    dayEl.style.cssText = 'font-size:.62rem;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:10px 0 4px;text-transform:uppercase';
+    const d = new Date(date + 'T12:00:00');
+    dayEl.textContent = d.toLocaleDateString('es-AR', {weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+    c.appendChild(dayEl);
+    groups[date].forEach(tx => {
+      const cats = tx.type === 'income' ? ECO_INCOME_CATS : ECO_EXPENSE_CATS;
+      const cat = cats.find(c => c.id === tx.category) || {emoji: tx.type === 'income' ? '💰' : '💸', label:'Otro'};
+      const item = document.createElement('div');
+      item.className = 'eco-tx-item';
+      item.innerHTML = `
+        <div class="eco-tx-icon" style="background:${tx.type==='income'?'rgba(0,184,148,.12)':'rgba(225,112,85,.12)'}">
+          <span style="font-size:16px">${cat.emoji}</span>
+        </div>
+        <div class="eco-tx-info">
+          <div class="eco-tx-name">${escapeHTMLEco(tx.name)}</div>
+          <div class="eco-tx-meta">
+            <span class="eco-tx-tag" style="background:${tx.type==='income'?'rgba(0,184,148,.15)':'rgba(225,112,85,.15)'};color:${tx.type==='income'?'var(--green)':'var(--red)'}">${cat.label}</span>
+            ${tx.note ? `<span>${escapeHTMLEco(tx.note)}</span>` : ''}
+          </div>
+        </div>
+        <div class="eco-tx-amount" style="color:${tx.type==='income'?'var(--green)':'var(--red)'}">
+          ${tx.type==='income'?'+':'−'}${ecoFmt(tx.amount)}
+        </div>
+        <button class="eco-tx-del" onclick="deleteEcoTx('${tx.id}')">✕</button>`;
+      c.appendChild(item);
+    });
+  });
+  renderEcoHero();
+}
+
+function deleteEcoTx(id) {
+  const eco = getEco();
+  eco.transactions = eco.transactions.filter(t => t.id !== id);
+  saveData(APP); renderEcoMovimientos(); renderEcoBadges(); renderEcoHero();
+}
+
+// ── Servicios ──
+function renderEcoServicios() {
+  const eco = getEco();
+  const c = document.getElementById('ecoServiciosList');
+  const cp = document.getElementById('ecoProximosVenc');
+  if (!c) return;
+
+  const now = nowGTM3();
+  const curYear = now.getFullYear();
+  const curMonth = now.getMonth() + 1;
+  const todayDay = now.getDate();
+  const monthKey = curYear + '-' + String(curMonth).padStart(2,'0');
+
+  if (!eco.services.length) {
+    c.innerHTML = `<div class="eco-empty">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div>No tenés servicios registrados.</div>
+    </div>`;
+    if (cp) cp.innerHTML = '<div class="eco-empty">Sin servicios próximos</div>';
+    return;
+  }
+
+  c.innerHTML = '';
+  eco.services.forEach(svc => {
+    const paidThisMonth = (svc.paidMonths || []).includes(monthKey);
+    const daysUntilDue = svc.dueDay - todayDay;
+    let dueClass = 'eco-due-ok', dueTxt = `Vence el ${svc.dueDay}`;
+    if (paidThisMonth) { dueClass = ''; dueTxt = '✓ Pagado'; }
+    else if (daysUntilDue < 0)     { dueClass = 'eco-due-overdue'; dueTxt = `Vencido hace ${Math.abs(daysUntilDue)}d`; }
+    else if (daysUntilDue <= 5)    { dueClass = 'eco-due-soon';    dueTxt = `Vence en ${daysUntilDue}d`; }
+
+    const item = document.createElement('div');
+    item.className = 'eco-service-item';
+    item.innerHTML = `
+      <div class="eco-service-icon" style="background:rgba(253,203,110,.1)">
+        <span>${svc.emoji || '⚡'}</span>
+      </div>
+      <div class="eco-service-info">
+        <div class="eco-service-name">${escapeHTMLEco(svc.name)}</div>
+        <div class="eco-service-meta">${{monthly:'Mensual',bimonthly:'Bimestral',quarterly:'Trimestral',yearly:'Anual'}[svc.freq]||'Mensual'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="eco-service-amount">${ecoFmt(svc.amount)}</div>
+        <div class="eco-service-due"><span class="eco-due-badge ${dueClass}">${dueTxt}</span></div>
+      </div>
+      <button class="eco-service-pay ${paidThisMonth?'paid':''}" onclick="toggleServicePaid('${svc.id}')" title="${paidThisMonth?'Marcar como no pagado':'Marcar como pagado'}">
+        ${paidThisMonth ? '✓' : '○'}
+      </button>
+      <button class="eco-service-del" onclick="deleteService('${svc.id}')">✕</button>`;
+    c.appendChild(item);
+  });
+
+  // Upcoming (next 15 days)
+  if (cp) {
+    const upcoming = eco.services
+      .filter(s => {
+        const paidThisMonth = (s.paidMonths||[]).includes(monthKey);
+        if (paidThisMonth) return false;
+        const days = s.dueDay - todayDay;
+        return days >= -3 && days <= 15;
+      })
+      .sort((a,b) => a.dueDay - b.dueDay);
+
+    if (!upcoming.length) {
+      cp.innerHTML = '<div style="font-size:.76rem;color:var(--muted);padding:10px 0">Sin vencimientos próximos ✓</div>';
+    } else {
+      cp.innerHTML = '';
+      upcoming.forEach(svc => {
+        const days = svc.dueDay - todayDay;
+        let dueClass = 'eco-due-ok', dueTxt = `en ${days}d`;
+        if (days < 0)    { dueClass = 'eco-due-overdue'; dueTxt = `vencido hace ${Math.abs(days)}d`; }
+        else if (days <= 3) { dueClass = 'eco-due-soon'; dueTxt = days === 0 ? '¡hoy!' : `en ${days}d`; }
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.8rem';
+        row.innerHTML = `<span style="font-size:16px">${svc.emoji||'⚡'}</span>
+          <span style="flex:1">${escapeHTMLEco(svc.name)}</span>
+          <span class="eco-due-badge ${dueClass}">${dueTxt}</span>
+          <span style="font-weight:700;font-variant-numeric:tabular-nums">${ecoFmt(svc.amount)}</span>`;
+        cp.appendChild(row);
+      });
+    }
+  }
+}
+
+function toggleServicePaid(id) {
+  const eco = getEco();
+  const svc = eco.services.find(s => s.id === id);
+  if (!svc) return;
+  if (!svc.paidMonths) svc.paidMonths = [];
+  const now = nowGTM3();
+  const mk = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const idx = svc.paidMonths.indexOf(mk);
+  if (idx >= 0) svc.paidMonths.splice(idx, 1);
+  else svc.paidMonths.push(mk);
+  saveData(APP); renderEcoServicios();
+}
+
+function deleteService(id) {
+  const eco = getEco();
+  eco.services = eco.services.filter(s => s.id !== id);
+  saveData(APP); renderEcoServicios(); renderEcoBadges();
+}
+
+// ── Deudas ──
+function renderEcoDeudas() {
+  const eco = getEco();
+  const c = document.getElementById('ecoDebtsList');
+  if (!c) return;
+  if (!eco.debts.length) {
+    c.innerHTML = `<div class="eco-empty">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <div>No hay deudas registradas.</div>
+    </div>`;
+    return;
+  }
+  c.innerHTML = '';
+  eco.debts.forEach(debt => {
+    const paid = debt.paid || 0;
+    const remaining = Math.max(0, debt.total - paid);
+    const pct = debt.total > 0 ? Math.round(paid / debt.total * 100) : 0;
+    const isComplete = remaining <= 0;
+    const item = document.createElement('div');
+    item.className = 'eco-debt-item';
+    item.innerHTML = `
+      <div class="eco-debt-icon">👤</div>
+      <div class="eco-debt-info">
+        <div class="eco-debt-name" style="${isComplete?'text-decoration:line-through;color:var(--muted)':''}">${escapeHTMLEco(debt.who)}</div>
+        <div class="eco-debt-desc">${escapeHTMLEco(debt.desc||'')}${debt.dueDate?` · Vence ${debt.dueDate}`:''}</div>
+        <div class="eco-debt-progress">
+          <div class="eco-debt-bar-row">
+            <div class="eco-debt-track">
+              <div class="eco-debt-fill" style="width:${pct}%;background:${isComplete?'var(--green)':'var(--amber)'}"></div>
+            </div>
+            <span class="eco-debt-pct">${pct}%</span>
+          </div>
+          <div class="eco-debt-amounts">
+            <span>Cobrado: ${ecoFmt(paid)}</span>
+            <span>${isComplete ? '✓ Saldada':'Falta: '+ecoFmt(remaining)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="eco-debt-right">
+        <div class="eco-debt-total">${ecoFmt(debt.total)}</div>
+        ${!isComplete ? `<button class="eco-debt-pay-btn" onclick="openDebtPayment('${debt.id}')">+ Cobrar</button>` : ''}
+        <button class="eco-tx-del" style="opacity:1" onclick="deleteDebt('${debt.id}')">✕</button>
+      </div>`;
+    c.appendChild(item);
+  });
+}
+
+function deleteDebt(id) {
+  const eco = getEco();
+  eco.debts = eco.debts.filter(d => d.id !== id);
+  saveData(APP); renderEcoDeudas(); renderEcoBadges(); renderEcoHero();
+}
+
+function openDebtPayment(id) {
+  document.getElementById('mDebtPayId').value = id;
+  document.getElementById('mDebtPayAmount').value = '';
+  document.getElementById('modalDebtPayment').classList.add('open');
+  document.getElementById('mDebtPayAmount').focus();
+}
+
+function saveDebtPayment() {
+  const id = document.getElementById('mDebtPayId').value;
+  const amount = parseFloat(document.getElementById('mDebtPayAmount').value) || 0;
+  if (amount <= 0) return;
+  const eco = getEco();
+  const debt = eco.debts.find(d => d.id === id);
+  if (!debt) return;
+  debt.paid = Math.min(debt.total, (debt.paid || 0) + amount);
+  saveData(APP);
+  document.getElementById('modalDebtPayment').classList.remove('open');
+  renderEcoDeudas(); renderEcoHero();
+}
+
+// ── Metas ──
+function renderEcoMetas() {
+  const eco = getEco();
+  const c = document.getElementById('ecoGoalsList');
+  if (!c) return;
+  if (!eco.goals.length) {
+    c.innerHTML = `<div class="eco-empty card">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      <div>No tenés metas de ahorro.</div>
+    </div>`;
+    return;
+  }
+  c.innerHTML = '';
+  eco.goals.forEach(goal => {
+    const saved = goal.saved || 0;
+    const pct = goal.target > 0 ? Math.min(100, Math.round(saved / goal.target * 100)) : 0;
+    const isComplete = saved >= goal.target;
+    const el = document.createElement('div');
+    el.className = 'eco-goal-item';
+    el.style.borderColor = isComplete ? 'var(--green)' : (goal.color || 'var(--border)');
+    el.innerHTML = `
+      <div class="eco-goal-header">
+        <span class="eco-goal-icon">${goal.emoji || '🎯'}</span>
+        <div class="eco-goal-name">${escapeHTMLEco(goal.name)}</div>
+        <span class="eco-goal-pct-badge" style="background:${isComplete?'rgba(0,184,148,.15)':'rgba(108,92,231,.12)'};color:${isComplete?'var(--green)':(goal.color||'var(--accent2)')}">
+          ${pct}%
+        </span>
+      </div>
+      <div class="eco-goal-track">
+        <div class="eco-goal-fill" style="width:${pct}%;background:${isComplete?'var(--green)':(goal.color||'var(--accent)')}"></div>
+      </div>
+      <div class="eco-goal-footer">
+        <div class="eco-goal-amounts">
+          ${ecoFmt(saved)} de ${ecoFmt(goal.target)} · faltan ${ecoFmt(Math.max(0, goal.target - saved))}
+        </div>
+        <div style="display:flex;gap:5px">
+          ${!isComplete ? `<button class="eco-goal-add-btn" onclick="openGoalAdd('${goal.id}')">+ Agregar ahorro</button>` : '<span style="font-size:.72rem;color:var(--green);font-weight:700">🎉 ¡Meta alcanzada!</span>'}
+          <button class="eco-goal-del-btn" onclick="deleteGoal('${goal.id}')">✕</button>
+        </div>
+      </div>`;
+    c.appendChild(el);
+  });
+}
+
+function openGoalAdd(id) {
+  document.getElementById('mGoalAddId').value = id;
+  document.getElementById('mGoalAddAmount').value = '';
+  document.getElementById('modalGoalAdd').classList.add('open');
+  document.getElementById('mGoalAddAmount').focus();
+}
+
+function saveGoalAdd() {
+  const id = document.getElementById('mGoalAddId').value;
+  const amount = parseFloat(document.getElementById('mGoalAddAmount').value) || 0;
+  if (amount <= 0) return;
+  const eco = getEco();
+  const goal = eco.goals.find(g => g.id === id);
+  if (!goal) return;
+  goal.saved = (goal.saved || 0) + amount;
+  saveData(APP);
+  document.getElementById('modalGoalAdd').classList.remove('open');
+  renderEcoMetas(); renderEcoBadges();
+}
+
+function deleteGoal(id) {
+  const eco = getEco();
+  eco.goals = eco.goals.filter(g => g.id !== id);
+  saveData(APP); renderEcoMetas(); renderEcoBadges();
+}
+
+// ── Análisis ──
+function renderEcoAnalisis() {
+  const eco = getEco();
+  const now = nowGTM3();
+
+  // Donut — gastos
+  renderEcoDonut('ecoDonutWrap', 'expense');
+  // Donut — ingresos
+  renderEcoDonut('ecoIncomeDonutWrap', 'income');
+  // Line chart 6 months
+  renderEcoLineChart();
+  // Insights
+  renderEcoInsights();
+}
+
+function renderEcoDonut(wrapperId, type) {
+  const wrap = document.getElementById(wrapperId);
+  if (!wrap) return;
+  const eco = getEco();
+  const now = nowGTM3();
+  // Last 3 months
+  const txs = [];
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(now); d.setMonth(d.getMonth() - i);
+    const prefix = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    eco.transactions.filter(t => t.type === type && t.date && t.date.startsWith(prefix)).forEach(t => txs.push(t));
+  }
+  const cats = type === 'income' ? ECO_INCOME_CATS : ECO_EXPENSE_CATS;
+  const totals = {};
+  txs.forEach(t => { totals[t.category] = (totals[t.category] || 0) + t.amount; });
+  const entries = Object.entries(totals).sort((a,b) => b[1]-a[1]);
+  if (!entries.length) {
+    wrap.innerHTML = `<div class="eco-empty" style="width:100%"><div>Sin datos aún</div></div>`;
+    return;
+  }
+  const total = entries.reduce((s,[,v]) => s + v, 0);
+  const DONUT_COLORS = ['#6c5ce7','#00b894','#fdcb6e','#e84393','#74b9ff','#a29bfe','#55efc4','#e17055','#fd79a8','#00cec9','#636e72','#b2bec3'];
+  const R = 52, r = 32, CX = 60, CY = 60, SIZE = 120;
+  let angle = -Math.PI / 2;
+  const slices = entries.slice(0, 6).map(([catId, val], i) => {
+    const pct = val / total;
+    const startAngle = angle;
+    angle += pct * 2 * Math.PI;
+    return { catId, val, pct, startAngle, endAngle: angle, color: DONUT_COLORS[i % DONUT_COLORS.length] };
+  });
+  // SVG paths
+  const pathsHTML = slices.map(s => {
+    const x1 = CX + R * Math.cos(s.startAngle), y1 = CY + R * Math.sin(s.startAngle);
+    const x2 = CX + R * Math.cos(s.endAngle),   y2 = CY + R * Math.sin(s.endAngle);
+    const ix1= CX + r * Math.cos(s.startAngle), iy1= CY + r * Math.sin(s.startAngle);
+    const ix2= CX + r * Math.cos(s.endAngle),   iy2= CY + r * Math.sin(s.endAngle);
+    const large = s.pct > 0.5 ? 1 : 0;
+    return `<path d="M${x1.toFixed(1)},${y1.toFixed(1)} A${R},${R} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} L${ix2.toFixed(1)},${iy2.toFixed(1)} A${r},${r} 0 ${large},0 ${ix1.toFixed(1)},${iy1.toFixed(1)} Z" fill="${s.color}" opacity=".92"/>`;
+  }).join('');
+
+  const legendHTML = slices.map(s => {
+    const cat = cats.find(c => c.id === s.catId) || { emoji:'?', label: s.catId };
+    return `<div class="eco-legend-item">
+      <div class="eco-legend-dot" style="background:${s.color}"></div>
+      <span class="eco-legend-name">${cat.emoji} ${cat.label}</span>
+      <span class="eco-legend-val">${Math.round(s.pct*100)}%</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="eco-donut-svg" style="position:relative;flex-shrink:0">
+      <svg viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">
+        <circle cx="${CX}" cy="${CY}" r="${R}" fill="var(--border2)"/>
+        ${pathsHTML}
+        <circle cx="${CX}" cy="${CY}" r="${r-2}" fill="var(--card)"/>
+      </svg>
+      <div class="eco-donut-center">
+        <div class="eco-donut-center-val">${ecoFmt(total)}</div>
+        <div class="eco-donut-center-lbl">${type === 'income' ? 'Ingresos' : 'Gastos'}</div>
+      </div>
+    </div>
+    <div class="eco-legend">${legendHTML}</div>`;
+}
+
+function renderEcoLineChart() {
+  const canvas = document.getElementById('ecoLineChart');
+  if (!canvas) return;
+  const eco = getEco();
+  const now = nowGTM3();
+  const months = [], incomes = [], expenses = [];
+  const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now); d.setDate(1); d.setMonth(d.getMonth() - i);
+    const prefix = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    months.push(MONTH_NAMES[d.getMonth()]);
+    const mTx = eco.transactions.filter(t => t.date && t.date.startsWith(prefix));
+    incomes.push(mTx.filter(t => t.type==='income').reduce((s,t) => s+t.amount, 0));
+    expenses.push(mTx.filter(t => t.type==='expense').reduce((s,t) => s+t.amount, 0));
+  }
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.getBoundingClientRect().width || 500;
+  canvas.width = W * dpr; canvas.height = 160 * dpr;
+  ctx.scale(dpr, dpr);
+  const H = 160, pad = {t:14, b:26, l:50, r:10};
+  const gW = W - pad.l - pad.r, gH = H - pad.t - pad.b;
+  ctx.clearRect(0, 0, W, H);
+  const maxVal = Math.max(...incomes, ...expenses, 1);
+  [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+    const y = pad.t + gH * (1 - v);
+    ctx.strokeStyle = '#1c1c28'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = '#55556a'; ctx.font = '500 9px DM Sans,sans-serif';
+    ctx.fillText(ecoFmt(maxVal * v), 0, y + 3);
+  });
+  months.forEach((m, i) => {
+    const x = pad.l + (i / (months.length - 1)) * gW;
+    ctx.fillStyle = '#55556a'; ctx.font = '500 9px DM Sans,sans-serif';
+    ctx.fillText(m, x - 8, H - 5);
+  });
+  const drawLine = (data, color, fillColor) => {
+    const pts = data.map((v, i) => ({ x: pad.l + (i/(data.length-1))*gW, y: pad.t + gH*(1-v/maxVal) }));
+    const grad = ctx.createLinearGradient(0, pad.t, 0, H - pad.b);
+    grad.addColorStop(0, fillColor); grad.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.moveTo(pts[0].x, H - pad.b);
+    pts.forEach(p => ctx.lineTo(p.x, p.y)); ctx.lineTo(pts[pts.length-1].x, H - pad.b);
+    ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath(); pts.forEach((p,i) => i ? ctx.lineTo(p.x,p.y) : ctx.moveTo(p.x,p.y)); ctx.stroke();
+    pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill(); });
+  };
+  drawLine(incomes, '#00b894', 'rgba(0,184,148,.1)');
+  drawLine(expenses, '#e17055', 'rgba(225,112,85,.08)');
+  // Legend
+  ctx.fillStyle = '#00b894'; ctx.fillRect(pad.l, H - 8, 10, 4);
+  ctx.fillStyle = '#55556a'; ctx.font = '500 9px DM Sans,sans-serif';
+  ctx.fillText('Ingresos', pad.l + 14, H - 4);
+  ctx.fillStyle = '#e17055'; ctx.fillRect(pad.l + 70, H - 8, 10, 4);
+  ctx.fillStyle = '#55556a'; ctx.fillText('Gastos', pad.l + 84, H - 4);
+}
+
+function renderEcoInsights() {
+  const c = document.getElementById('ecoSummaryInsights');
+  if (!c) return;
+  const eco = getEco();
+  const now = nowGTM3();
+  const curMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const monthTx = eco.transactions.filter(t => t.date && t.date.startsWith(curMonth));
+  const income = monthTx.filter(t => t.type==='income').reduce((s,t) => s+t.amount, 0);
+  const expense = monthTx.filter(t => t.type==='expense').reduce((s,t) => s+t.amount, 0);
+  const savingRate = income > 0 ? Math.round((1 - expense/income)*100) : 0;
+  const totalDebt = eco.debts.reduce((s,d) => s+Math.max(0,d.total-(d.paid||0)), 0);
+  const servicesMonth = eco.services.reduce((s,svc) => {
+    const f = {monthly:1,bimonthly:0.5,quarterly:0.33,yearly:0.083}[svc.freq]||1;
+    return s + svc.amount * f;
+  }, 0);
+  const upcomingServices = eco.services.filter(s => {
+    const paid = (s.paidMonths||[]).includes(curMonth);
+    return !paid && s.dueDay >= now.getDate() && s.dueDay - now.getDate() <= 7;
+  });
+
+  const rows = [
+    income > 0 ? {icon:'💰', text:`Tasa de ahorro este mes: <strong style="color:${savingRate>=20?'var(--green)':savingRate>=0?'var(--amber)':'var(--red)'}"> ${savingRate}%</strong>. ${savingRate>=20?'¡Excelente!':savingRate>=0?'Podés mejorar.':'Estás gastando más de lo que ingresa.'}`} : null,
+    servicesMonth > 0 ? {icon:'⚡', text:`Servicios: <strong>${ecoFmt(servicesMonth)}/mes</strong> (${income>0?Math.round(servicesMonth/income*100)+'% de tus ingresos':'—'})`} : null,
+    totalDebt > 0 ? {icon:'⚠️', text:`Deudas pendientes: <strong style="color:var(--amber)">${ecoFmt(totalDebt)}</strong>`} : null,
+    upcomingServices.length ? {icon:'🔔', text:`${upcomingServices.length} servicio(s) vencen esta semana: ${upcomingServices.map(s=>s.name).join(', ')}`} : null,
+    eco.goals.length ? {icon:'🎯', text:`${eco.goals.filter(g=>(g.saved||0)>=g.target).length} de ${eco.goals.length} metas alcanzadas`} : null,
+    !income && !expense ? {icon:'📊', text:'Agregá movimientos para ver análisis completo.'} : null,
+  ].filter(Boolean);
+
+  c.innerHTML = rows.map(r => `
+    <div class="insight-row">
+      <div class="ins-icon">${r.icon}</div>
+      <div class="ins-text">${r.text}</div>
+    </div>`).join('');
+}
+
+// ── Modal ingreso/gasto ──
+function openEcoModal(type, editId = null) {
+  document.getElementById('mecoTxType').value = type;
+  document.getElementById('mecoTxEditId').value = editId || '';
+  document.getElementById('mecoTxTitle').textContent = type === 'income' ? 'Nuevo ingreso' : 'Nuevo gasto';
+  document.getElementById('mecoTxName').value = '';
+  document.getElementById('mecoTxAmount').value = '';
+  document.getElementById('mecoTxDate').value = REAL_TODAY;
+  document.getElementById('mecoTxNote').value = '';
+  _ecoCatSel = type === 'income' ? 'salary' : 'food';
+  buildEcoCatGrid(type);
+  document.getElementById('modalEcoTx').classList.add('open');
+  document.getElementById('mecoTxName').focus();
+}
+function closeEcoModal() { document.getElementById('modalEcoTx').classList.remove('open'); }
+
+function buildEcoCatGrid(type) {
+  const cats = type === 'income' ? ECO_INCOME_CATS : ECO_EXPENSE_CATS;
+  const grid = document.getElementById('mecoTxCatGrid');
+  grid.innerHTML = cats.map(cat => `
+    <button type="button" class="eco-cat-btn ${cat.id === _ecoCatSel ? 'sel' : ''}" data-catid="${cat.id}"
+            onclick="selectEcoCat('${cat.id}',this)">
+      <span class="eco-cat-emoji">${cat.emoji}</span>${cat.label}
+    </button>`).join('');
+}
+
+function selectEcoCat(id, btn) {
+  _ecoCatSel = id;
+  document.querySelectorAll('#mecoTxCatGrid .eco-cat-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function saveEcoTx() {
+  const name = document.getElementById('mecoTxName').value.trim();
+  const amount = parseFloat(document.getElementById('mecoTxAmount').value) || 0;
+  const date = document.getElementById('mecoTxDate').value || REAL_TODAY;
+  const type = document.getElementById('mecoTxType').value;
+  const note = document.getElementById('mecoTxNote').value.trim();
+  if (!name) { document.getElementById('mecoTxName').focus(); return; }
+  if (amount <= 0) { document.getElementById('mecoTxAmount').focus(); return; }
+  const eco = getEco();
+  eco.transactions.push({ id: 'tx' + Date.now(), type, name, amount, date, category: _ecoCatSel, note });
+  saveData(APP);
+  closeEcoModal();
+  renderEcoMovimientos(); renderEcoHero(); renderEcoBadges();
+}
+
+// ── Modal servicio ──
+let _editServiceId = null;
+function openServiceModal(id = null) {
+  _editServiceId = id;
+  const svc = id ? getEco().services.find(s => s.id === id) : null;
+  document.getElementById('mServiceTitle').textContent = id ? 'Editar servicio' : 'Nuevo servicio';
+  document.getElementById('mServiceName').value = svc?.name || '';
+  document.getElementById('mServiceAmount').value = svc?.amount || '';
+  document.getElementById('mServiceDueDay').value = svc?.dueDay || '';
+  document.getElementById('mServiceFreq').value = svc?.freq || 'monthly';
+  document.getElementById('mServiceEmoji').value = svc?.emoji || '';
+  document.getElementById('modalService').classList.add('open');
+  document.getElementById('mServiceName').focus();
+}
+function closeServiceModal() { document.getElementById('modalService').classList.remove('open'); _editServiceId = null; }
+function saveService() {
+  const name = document.getElementById('mServiceName').value.trim();
+  const amount = parseFloat(document.getElementById('mServiceAmount').value) || 0;
+  const dueDay = parseInt(document.getElementById('mServiceDueDay').value) || 1;
+  const freq = document.getElementById('mServiceFreq').value;
+  const emoji = document.getElementById('mServiceEmoji').value.trim();
+  if (!name) { document.getElementById('mServiceName').focus(); return; }
+  const eco = getEco();
+  if (_editServiceId) {
+    const idx = eco.services.findIndex(s => s.id === _editServiceId);
+    eco.services[idx] = { ...eco.services[idx], name, amount, dueDay, freq, emoji };
+  } else {
+    eco.services.push({ id: 'svc' + Date.now(), name, amount, dueDay, freq, emoji, paidMonths: [] });
+  }
+  saveData(APP); closeServiceModal(); renderEcoServicios(); renderEcoBadges();
+}
+
+// ── Modal deuda ──
+let _editDebtId = null;
+function openDebtModal(id = null) {
+  _editDebtId = id;
+  const debt = id ? getEco().debts.find(d => d.id === id) : null;
+  document.getElementById('mDebtTitle').textContent = id ? 'Editar deuda' : 'Nueva deuda';
+  document.getElementById('mDebtWho').value = debt?.who || '';
+  document.getElementById('mDebtDesc').value = debt?.desc || '';
+  document.getElementById('mDebtTotal').value = debt?.total || '';
+  document.getElementById('mDebtPaid').value = debt?.paid || '';
+  document.getElementById('mDebtDue').value = debt?.dueDate || '';
+  document.getElementById('modalDebt').classList.add('open');
+  document.getElementById('mDebtWho').focus();
+}
+function closeDebtModal() { document.getElementById('modalDebt').classList.remove('open'); _editDebtId = null; }
+function saveDebt() {
+  const who = document.getElementById('mDebtWho').value.trim();
+  const total = parseFloat(document.getElementById('mDebtTotal').value) || 0;
+  const paid = parseFloat(document.getElementById('mDebtPaid').value) || 0;
+  const desc = document.getElementById('mDebtDesc').value.trim();
+  const dueDate = document.getElementById('mDebtDue').value;
+  if (!who) { document.getElementById('mDebtWho').focus(); return; }
+  const eco = getEco();
+  if (_editDebtId) {
+    const idx = eco.debts.findIndex(d => d.id === _editDebtId);
+    eco.debts[idx] = { ...eco.debts[idx], who, total, paid, desc, dueDate };
+  } else {
+    eco.debts.push({ id: 'dbt' + Date.now(), who, total, paid, desc, dueDate, createdAt: REAL_TODAY });
+  }
+  saveData(APP); closeDebtModal(); renderEcoDeudas(); renderEcoBadges(); renderEcoHero();
+}
+
+// ── Modal meta ──
+let _editGoalId = null;
+function openGoalModal(id = null) {
+  _editGoalId = id;
+  const goal = id ? getEco().goals.find(g => g.id === id) : null;
+  document.getElementById('mGoalTitle').textContent = id ? 'Editar meta' : 'Nueva meta';
+  document.getElementById('mGoalName').value = goal?.name || '';
+  document.getElementById('mGoalEmoji').value = goal?.emoji || '';
+  document.getElementById('mGoalTarget').value = goal?.target || '';
+  document.getElementById('mGoalSaved').value = goal?.saved || '';
+  document.getElementById('mGoalColor').value = goal?.color || '#6c5ce7';
+  buildGoalColorPicker(goal?.color || '#6c5ce7');
+  document.getElementById('modalGoal').classList.add('open');
+  document.getElementById('mGoalName').focus();
+}
+function closeGoalModal() { document.getElementById('modalGoal').classList.remove('open'); _editGoalId = null; }
+function buildGoalColorPicker(sel) {
+  const c = document.getElementById('goalColorRow');
+  if (!c) return;
+  const COLORS = ['#6c5ce7','#00b894','#00cec9','#fdcb6e','#e84393','#e17055','#74b9ff','#a29bfe','#55efc4','#fd79a8'];
+  c.innerHTML = '';
+  COLORS.forEach(col => {
+    const sw = document.createElement('div');
+    sw.className = 'color-sw' + (col===sel?' sel':'');
+    sw.style.background = col;
+    sw.onclick = () => {
+      document.querySelectorAll('#goalColorRow .color-sw').forEach(s => s.classList.remove('sel'));
+      sw.classList.add('sel');
+      document.getElementById('mGoalColor').value = col;
+    };
+    c.appendChild(sw);
+  });
+}
+function saveGoal() {
+  const name = document.getElementById('mGoalName').value.trim();
+  const target = parseFloat(document.getElementById('mGoalTarget').value) || 0;
+  const saved = parseFloat(document.getElementById('mGoalSaved').value) || 0;
+  const emoji = document.getElementById('mGoalEmoji').value.trim();
+  const color = document.getElementById('mGoalColor').value;
+  if (!name) { document.getElementById('mGoalName').focus(); return; }
+  const eco = getEco();
+  if (_editGoalId) {
+    const idx = eco.goals.findIndex(g => g.id === _editGoalId);
+    eco.goals[idx] = { ...eco.goals[idx], name, target, saved, emoji, color };
+  } else {
+    eco.goals.push({ id: 'goal' + Date.now(), name, target, saved, emoji, color });
+  }
+  saveData(APP); closeGoalModal(); renderEcoMetas(); renderEcoBadges();
+}
+
+// ── Helpers ──
+function escapeHTMLEco(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Close modals on background click
+['modalEcoTx','modalService','modalDebt','modalDebtPayment','modalGoal','modalGoalAdd'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', e => { if (e.target === e.currentTarget) el.classList.remove('open'); });
+});
+
+// ── Expose to window ──
+window.ecoShowTab = ecoShowTab;
+window.ecoSelMonth = ecoSelMonth;
+window.openEcoModal = openEcoModal;
+window.closeEcoModal = closeEcoModal;
+window.selectEcoCat = selectEcoCat;
+window.saveEcoTx = saveEcoTx;
+window.deleteEcoTx = deleteEcoTx;
+window.openServiceModal = openServiceModal;
+window.closeServiceModal = closeServiceModal;
+window.saveService = saveService;
+window.toggleServicePaid = toggleServicePaid;
+window.deleteService = deleteService;
+window.openDebtModal = openDebtModal;
+window.closeDebtModal = closeDebtModal;
+window.saveDebt = saveDebt;
+window.deleteDebt = deleteDebt;
+window.openDebtPayment = openDebtPayment;
+window.saveDebtPayment = saveDebtPayment;
+window.openGoalModal = openGoalModal;
+window.closeGoalModal = closeGoalModal;
+window.saveGoal = saveGoal;
+window.openGoalAdd = openGoalAdd;
+window.saveGoalAdd = saveGoalAdd;
+window.deleteGoal = deleteGoal;
+window.renderEconomia = renderEconomia;
+
+
 // Backup / restore
 window.runRestore = runRestore;
 window.handleRestoreFile = handleRestoreFile;
 </script>
+
+
+<!-- ══ MODALES ECONOMÍA ══ -->
+<!-- ═══ MODALES ECONOMÍA ═══ -->
+
+<!-- Modal ingreso/gasto -->
+<div class="modal-bg" id="modalEcoTx">
+  <div class="modal">
+    <div class="modal-title" id="mecoTxTitle">Nuevo ingreso</div>
+    <input type="hidden" id="mecoTxType" value="income">
+    <input type="hidden" id="mecoTxEditId" value="">
+
+    <div class="fg">
+      <label class="fl">Descripción</label>
+      <input class="fi" id="mecoTxName" placeholder="ej: Sueldo, Freelance, Compra supermercado...">
+    </div>
+    <div class="fg">
+      <label class="fl">Monto ($)</label>
+      <input class="fi" id="mecoTxAmount" type="number" min="0" step="0.01" placeholder="0.00">
+    </div>
+    <div class="fg">
+      <label class="fl">Fecha</label>
+      <input class="fi" id="mecoTxDate" type="date">
+    </div>
+    <div class="fg">
+      <label class="fl">Categoría</label>
+      <div class="eco-modal-cat-grid" id="mecoTxCatGrid"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Nota (opcional)</label>
+      <input class="fi" id="mecoTxNote" placeholder="Detalle adicional...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeEcoModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveEcoTx()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal servicio -->
+<div class="modal-bg" id="modalService">
+  <div class="modal">
+    <div class="modal-title" id="mServiceTitle">Nuevo servicio</div>
+    <input type="hidden" id="mServiceEditId" value="">
+    <div class="fg"><label class="fl">Nombre</label><input class="fi" id="mServiceName" placeholder="ej: Netflix, Luz, Internet..."></div>
+    <div class="fg"><label class="fl">Monto ($)</label><input class="fi" id="mServiceAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="fg">
+      <label class="fl">Día de vencimiento</label>
+      <input class="fi" id="mServiceDueDay" type="number" min="1" max="31" placeholder="ej: 15">
+    </div>
+    <div class="fg">
+      <label class="fl">Frecuencia</label>
+      <select class="fs" id="mServiceFreq">
+        <option value="monthly">Mensual</option>
+        <option value="bimonthly">Bimestral</option>
+        <option value="quarterly">Trimestral</option>
+        <option value="yearly">Anual</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Categoría / Emoji</label>
+      <input class="fi" id="mServiceEmoji" placeholder="ej: 📺 💡 📶 🏠 🚗" maxlength="4" style="width:70px;display:inline">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeServiceModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveService()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal deuda -->
+<div class="modal-bg" id="modalDebt">
+  <div class="modal">
+    <div class="modal-title" id="mDebtTitle">Nueva deuda</div>
+    <input type="hidden" id="mDebtEditId" value="">
+    <div class="fg"><label class="fl">¿Quién te debe?</label><input class="fi" id="mDebtWho" placeholder="ej: Juan Pérez"></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="mDebtDesc" placeholder="ej: Préstamo del 10 de enero..."></div>
+    <div class="fg"><label class="fl">Monto total ($)</label><input class="fi" id="mDebtTotal" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="fg"><label class="fl">Ya pagado ($) — opcional</label><input class="fi" id="mDebtPaid" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="fg"><label class="fl">Fecha límite (opcional)</label><input class="fi" id="mDebtDue" type="date"></div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeDebtModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveDebt()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pago parcial deuda -->
+<div class="modal-bg" id="modalDebtPayment">
+  <div class="modal">
+    <div class="modal-title">Registrar pago</div>
+    <input type="hidden" id="mDebtPayId" value="">
+    <div class="fg">
+      <label class="fl">Monto cobrado ($)</label>
+      <input class="fi" id="mDebtPayAmount" type="number" min="0" step="0.01" placeholder="0.00">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="document.getElementById('modalDebtPayment').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveDebtPayment()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal meta de ahorro -->
+<div class="modal-bg" id="modalGoal">
+  <div class="modal">
+    <div class="modal-title" id="mGoalTitle">Nueva meta</div>
+    <input type="hidden" id="mGoalEditId" value="">
+    <div class="fg"><label class="fl">Nombre de la meta</label><input class="fi" id="mGoalName" placeholder="ej: Viaje a Brasil, Auto nuevo..."></div>
+    <div class="fg"><label class="fl">Emoji</label><input class="fi" id="mGoalEmoji" placeholder="ej: ✈️ 🚗 🏠" maxlength="4" style="width:70px;display:inline"></div>
+    <div class="fg"><label class="fl">Meta total ($)</label><input class="fi" id="mGoalTarget" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="fg"><label class="fl">Ya ahorrado ($)</label><input class="fi" id="mGoalSaved" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="fg"><label class="fl">Color</label><div class="color-row" id="goalColorRow"></div><input type="hidden" id="mGoalColor" value="#6c5ce7"></div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeGoalModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveGoal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal agregar a meta -->
+<div class="modal-bg" id="modalGoalAdd">
+  <div class="modal">
+    <div class="modal-title">Agregar ahorro</div>
+    <input type="hidden" id="mGoalAddId" value="">
+    <div class="fg">
+      <label class="fl">¿Cuánto vas a agregar? ($)</label>
+      <input class="fi" id="mGoalAddAmount" type="number" min="0" step="0.01" placeholder="0.00">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="document.getElementById('modalGoalAdd').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveGoalAdd()">Agregar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
